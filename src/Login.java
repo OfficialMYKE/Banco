@@ -19,6 +19,8 @@ public class Login extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        BaseDatos.cargarUsuarios();
+
 
         Registrate.addMouseListener(new MouseAdapter() {
             @Override
@@ -52,9 +54,9 @@ public class Login extends JFrame{
 
             if (coincideUsuario && usua.getContrasena().equals(contrasenaIngresada)){
                 UsuarioEncontrado = true;
-                JOptionPane.showMessageDialog(null, "Bienvenido");
+                JOptionPane.showMessageDialog(null, "Bienvenido " + usua.getNombre()); // Agregué el nombre para que se vea mejor
 
-                Banco pantallaPricipal = new Banco();
+                Banco pantallaPricipal = new Banco(usua);
                 pantallaPricipal.setVisible(true);
 
                 dispose();
@@ -65,5 +67,6 @@ public class Login extends JFrame{
         if (!UsuarioEncontrado){
             JOptionPane.showMessageDialog(null,"Usuario o contraseña incorrecta");
         }
+
     }
 }

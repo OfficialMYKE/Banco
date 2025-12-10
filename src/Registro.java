@@ -59,8 +59,10 @@ public class Registro extends JFrame{
             return;
         }
 
-        Usuario usuarioNuevo = new Usuario(nombre,cedula,email,contrasena,0);
+        Usuario usuarioNuevo = new Usuario(nombre,cedula,email,contrasena,0.00);
         BaseDatos.ListaUsuarios.add(usuarioNuevo);
+
+        BaseDatos.guardarUsuarios();
 
         JOptionPane.showMessageDialog(null, "Cuenta creada exitosamente");
 
