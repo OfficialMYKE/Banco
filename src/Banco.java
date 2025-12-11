@@ -97,7 +97,7 @@ public class Banco extends JFrame {
     private void actualizarDatosEnPantalla() {
         if (Usuario != null && Saldo != null) {
             Usuario.setText("Bienvenido: " + usuarioActual.getNombre());
-            Saldo.setText("Saldo Actual: " + df.format(usuarioActual.getSaldo()));
+            Saldo.setText("SALDO ACTUAL: " + df.format(usuarioActual.getSaldo()));
         }
         if (usuarioActual.getHistorial() !=null){
             modeloTabla.setRowCount(0);
