@@ -106,6 +106,28 @@ Módulo avanzado para enviar dinero entre usuarios del mismo banco.
 
 -----
 
+## 🔐 Configuración de Conexión (BaseDatos.java)
+
+La conexión a la base de datos se gestiona dentro de la clase `BaseDatos.java`. Para ejecutar el proyecto en un entorno local, asegúrese de configurar las constantes con las credenciales de su servidor MySQL.
+
+A continuación, se muestra un ejemplo del código de configuración (sin credenciales reales):
+
+```java
+public class BaseDatos {
+    
+    // URL de conexión (Host: localhost, Puerto: 3306, Base: sistema_bancario)
+    private static final String URL = "jdbc:mysql://localhost:3306/sistema_bancario";
+    
+    // Usuario por defecto de MySQL
+    private static final String USER = "root"; 
+    
+    // IMPORTANTE: Reemplace "TU_CLAVE_AQUI" por la contraseña real de su MySQL
+    private static final String PASSWORD = "TU_CLAVE_AQUI"; 
+}
+````
+
+-----
+
 ## Tecnologías Utilizadas
 
   * **Lenguaje de Programación:** Java (JDK 21)
