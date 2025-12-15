@@ -59,7 +59,7 @@ public class Registro extends JFrame{
             return;
         }
 
-        Usuario usuarioNuevo = new Usuario(nombre,cedula,email,contrasena,0.00);
+        /*Usuario usuarioNuevo = new Usuario(nombre,cedula,email,contrasena,0.00);
         BaseDatos.ListaUsuarios.add(usuarioNuevo);
 
         BaseDatos.guardarUsuarios();
@@ -69,7 +69,19 @@ public class Registro extends JFrame{
         Login pantallaLogin = new Login();
         pantallaLogin.setVisible(true);
 
-        dispose();
+        dispose();*/
+
+        boolean registroExitoso = BaseDatos.registrarUsuario(nombre, cedula, email, contrasena);
+
+        if (registroExitoso){
+            JOptionPane.showMessageDialog(null,"Cuenta creada exitosamente");
+
+            Login pantallaLogin = new Login();
+            pantallaLogin.setVisible(true);
+            dispose();
+        }else {
+            JOptionPane.showMessageDialog(null, "Error al crear cuenta");
+        }
     }
 }
 

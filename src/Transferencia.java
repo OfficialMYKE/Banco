@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 public class Transferencia extends JFrame {
     private JPanel Pantalla_Transferencia;
@@ -62,22 +63,20 @@ public class Transferencia extends JFrame {
                 return;
             }
 
-            Usuario usuarioDestino = null;
-
-            for (Usuario u : BaseDatos.ListaUsuarios) {
-                if (u.getNombre().equals(destinatarioInput) || u.getEmail().equals(destinatarioInput)) {
-                    usuarioDestino = u;
-                    break;
-                }
-            }
+            Usuario usuarioDestino = BaseDatos.buscarUsuario(destinatarioInput);
 
             if (usuarioDestino != null) {
-                usuarioOrigen.setSaldo(usuarioOrigen.getSaldo() - monto);
-                usuarioOrigen.registrarMovimiento("Transferencia enviada", -monto);
+                String fechaHoy = LocalDate.now().toString();
 
-                usuarioDestino.setSaldo(usuarioDestino.getSaldo() + monto);
-                usuarioDestino.registrarMovimiento("Transferencia recibida", monto);
-                BaseDatos.guardarUsuarios();
+                double nuevoSaldoOrigen = usuarioOrigen.getSaldo() - monto;
+                double nuevoSaldoDestino = usuarioDestino.getSaldo() + monto;
+
+                usuarioOrigen.setSaldo(nuevoSaldoOrigen);
+                BaseDatos.actualizarSaldo(usuarioOrigen.getId(), nuevoSaldoOrigen);
+                BaseDatos.guardarMovimiento(usuarioOrigen.getId(), "Transferencia enviada", -monto, fechaHoy);
+
+                BaseDatos.actualizarSaldo(usuarioDestino.getId(), nuevoSaldoDestino);
+                BaseDatos.guardarMovimiento(usuarioDestino.getId(), "Transferencia recibida", monto, fechaHoy);
 
                 JOptionPane.showMessageDialog(null, "Transferencia exitosa a " + usuarioDestino.getNombre());
                 dispose();

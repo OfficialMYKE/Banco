@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 public class Retiro extends JFrame {
     private JPanel Pantalla_Retiro;
@@ -55,12 +56,14 @@ public class Retiro extends JFrame {
                 JOptionPane.showMessageDialog(null, "Saldo insuficiente. Su saldo es: $" + usuarioActual.getSaldo());
                 return;
             }
+            double nuevoSaldo = usuarioActual.getSaldo() - cantidadRetiro;
+            String fechaHoy = LocalDate.now().toString();
 
-            double saldoActual = usuarioActual.getSaldo();
+            usuarioActual.setSaldo(nuevoSaldo);
 
-            usuarioActual.setSaldo(saldoActual - cantidadRetiro);
-            usuarioActual.registrarMovimiento("Retiro", -cantidadRetiro);
-            BaseDatos.guardarUsuarios();
+            BaseDatos.actualizarSaldo(usuarioActual.getId(), nuevoSaldo);
+
+            BaseDatos.guardarMovimiento(usuarioActual.getId(), "Retiro", -cantidadRetiro, fechaHoy);
 
             JOptionPane.showMessageDialog(null, "Retiro exitoso. Nuevo saldo: $" + usuarioActual.getSaldo());
             dispose();

@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 public class Usuario implements Serializable{
     private static final long serialVersionUID = 1L;
+    private int id;
     private String nombre;
     private String cedula;
     private String email;
@@ -10,13 +11,28 @@ public class Usuario implements Serializable{
     private double saldo;
     private ArrayList<Movimiento>historial;
 
-    public Usuario(String nombre, String cedula, String email, String contrasena, double saldo) {
+    public Usuario(int id, String nombre, String cedula, String email, String contrasena, double saldo) {
+        this.id = id;
         this.nombre = nombre;
         this.cedula = cedula;
         this.email = email;
         this.contrasena = contrasena;
-        this.saldo = 0.00;
+        this.saldo = saldo;
         this.historial = new ArrayList<>();
+    }
+
+    public Usuario(String nombre, String cedula, String email, String contrasena, double saldo, ArrayList<Movimiento> historial) {
+        this.nombre = nombre;
+        this.cedula = cedula;
+        this.email = email;
+        this.contrasena = contrasena;
+        this.saldo = saldo;
+        this.historial = historial;
+        this.id = 0;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getNombre() {
@@ -39,8 +55,16 @@ public class Usuario implements Serializable{
         return saldo;
     }
 
+    public ArrayList<Movimiento> getHistorial() {
+        return historial;
+    }
+
     public void setSaldo(double saldo) {
         this.saldo = saldo;
+    }
+
+    public void setHistorial(ArrayList<Movimiento> historial) {
+        this.historial = historial;
     }
 
     public void registrarMovimiento(String tipo, double monto){
@@ -48,7 +72,4 @@ public class Usuario implements Serializable{
         historial.add(nuevoMov);
     }
 
-    public ArrayList<Movimiento> getHistorial(){
-        return historial;
-    }
 }

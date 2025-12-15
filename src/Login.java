@@ -19,7 +19,7 @@ public class Login extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        BaseDatos.cargarUsuarios();
+        //BaseDatos.cargarUsuarios();
 
 
         Registrate.addMouseListener(new MouseAdapter() {
@@ -42,7 +42,7 @@ public class Login extends JFrame{
         });
     }
 
-    private void validarLogin(){
+    /*private void validarLogin(){
         String inputUsuario = text_Usuario.getText();
         String contrasenaIngresada = new String(pass_Contrasena.getPassword());
 
@@ -66,7 +66,23 @@ public class Login extends JFrame{
 
         if (!UsuarioEncontrado){
             JOptionPane.showMessageDialog(null,"Usuario o contraseña incorrecta");
+        }*/
+
+    private void validarLogin(){
+        String inputUsuario = text_Usuario.getText();
+        String contrasenaIngresada = new String(pass_Contrasena.getPassword());
+
+        Usuario usuarioEncontrado = BaseDatos.validarLogin(inputUsuario, contrasenaIngresada);
+        if (usuarioEncontrado != null){
+            JOptionPane.showMessageDialog(null, "Bienvenido" + usuarioEncontrado.getNombre());
+            Banco pantallaPrincipal = new Banco(usuarioEncontrado);
+            pantallaPrincipal.setVisible(true);
+
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
         }
+
 
     }
 }

@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 public class Deposito extends JFrame {
     private JPanel Pantalla_Deposito;
@@ -47,11 +48,19 @@ public class Deposito extends JFrame {
             double cantidadMonto = Double.parseDouble(textoMonto);
 
             if (cantidadMonto > 0) {
-                double saldoActual = usuarioActual.getSaldo();
+                double nuevoSaldo = usuarioActual.getSaldo() + cantidadMonto;
+                String fechaHoy = LocalDate.now().toString();
 
-                usuarioActual.setSaldo(saldoActual + cantidadMonto);
-                usuarioActual.registrarMovimiento("Deposito", cantidadMonto);
-                BaseDatos.guardarUsuarios();
+                // 1. Actualizamos el objeto local (para que la pantalla del Banco se actualice visualmente)
+                usuarioActual.setSaldo(nuevoSaldo);
+
+                // 2. Actualizamos el saldo en la Base de Datos
+                BaseDatos.actualizarSaldo(usuarioActual.getId(), nuevoSaldo);
+
+                // 3. Guardamos el movimiento en la tabla de la Base de Datos
+                BaseDatos.guardarMovimiento(usuarioActual.getId(), "Depósito", cantidadMonto, fechaHoy);
+
+                // ELIMINADO: BaseDatos.guardarUsuarios(); (Ya no es necesario)
 
                 JOptionPane.showMessageDialog(null, "Depósito Realizado con Éxito");
                 dispose();
