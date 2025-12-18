@@ -8,7 +8,7 @@ public class Login extends JFrame{
     private JPanel Login_Panel;
     private JTextField text_Usuario;
     private JButton iniciarButton;
-    private JLabel Registrate;
+    private JLabel Registrate; // Este Label funciona como un boton/link
     private JPasswordField pass_Contrasena;
 
     public Login(){
@@ -21,14 +21,16 @@ public class Login extends JFrame{
 
         //BaseDatos.cargarUsuarios();
 
-
+        // Usamos un MouseListener para que el texto "REGISTRATE" funcione como un enlace
         Registrate.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                // Abrir ventana de registro
                 Registro pantallaRegistro = new Registro();
                 pantallaRegistro.setVisible(true);
 
+                //Cuando se abre la pantalla registro se cierra la pantalla LOGIN
                 dispose();
             }
         });
@@ -37,6 +39,7 @@ public class Login extends JFrame{
         iniciarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //Llamamos a la funcion para verificar los datos
                 validarLogin();
             }
         });
@@ -68,18 +71,24 @@ public class Login extends JFrame{
             JOptionPane.showMessageDialog(null,"Usuario o contraseña incorrecta");
         }*/
 
+    // Validar logica con la base de datos
     private void validarLogin(){
+        // Capturamos lo que el usuario escribio
         String inputUsuario = text_Usuario.getText();
+        // Convertimos la contraseña en String porque devuelve un Char
         String contrasenaIngresada = new String(pass_Contrasena.getPassword());
-
+        // Si existe, nos devuelve el objeto Usuario completo (con su ID, saldo, etc.)
         Usuario usuarioEncontrado = BaseDatos.validarLogin(inputUsuario, contrasenaIngresada);
         if (usuarioEncontrado != null){
+            // Usuario existentente yu datos correctos
             JOptionPane.showMessageDialog(null, "Bienvenido" + usuarioEncontrado.getNombre());
+            // Redirgimos al usuario a la pantalla de principal BANCO.
             Banco pantallaPrincipal = new Banco(usuarioEncontrado);
             pantallaPrincipal.setVisible(true);
 
             dispose();
         } else {
+            //La base de datos no encontro coincidencias o la clave estaba mal
             JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
         }
 

@@ -20,11 +20,14 @@ public class Banco extends JFrame {
     private JTable table1;
     private JButton ELIMINARREGISTROSButton;
 
+    // Objeto 'Usuario': Mantiene la sesion de quien esta logueado actualmente.
     private Usuario usuarioActual;
+    // Controla que datos se muestran en las filas/columnas.
     private DefaultTableModel modeloTabla;
     private DecimalFormat df = new DecimalFormat("$#,##0.00");
 
     public Banco(Usuario usuarioRecibido){
+        // Recibimos al usuario que paso al logon
         this.usuarioActual = usuarioRecibido;
 
         setContentPane(Pantalla_Principal);
@@ -35,6 +38,7 @@ public class Banco extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         configurarTabla();
+        // Llenamos los datos (Nombre, Saldo y Tabla) por primera vez
         actualizarDatosEnPantalla();
 
         SALIRButton.addActionListener(new ActionListener() {
@@ -49,6 +53,7 @@ public class Banco extends JFrame {
         DEPÓSITOButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Abrimos la ventanita de deposito
                 Deposito pantallaDeposito = new Deposito(usuarioActual);
 
                 pantallaDeposito.addWindowListener(new WindowAdapter() {
@@ -63,6 +68,7 @@ public class Banco extends JFrame {
         RETIROButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Abrimos la ventanita de retiro
                 Retiro pantallaRetiro = new Retiro(usuarioActual);
 
                 pantallaRetiro.addWindowListener(new WindowAdapter() {
@@ -77,6 +83,7 @@ public class Banco extends JFrame {
         TRANSFERENCIAButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Abrimos la ventanita de trnasferencia
                 Transferencia pantallaTransf = new Transferencia(usuarioActual);
 
                 pantallaTransf.addWindowListener(new WindowAdapter() {
@@ -87,6 +94,7 @@ public class Banco extends JFrame {
                 });
             }
         });
+
 
         ELIMINARREGISTROSButton.addActionListener(new ActionListener() {
             @Override
@@ -108,26 +116,31 @@ public class Banco extends JFrame {
 
     private void configurarTabla() {
         String[] columnas = {"Tipo Operación", "Monto", "Fecha"};
+        // Inicializamos el modelo con las columnas pero sin datos (null)
         modeloTabla = new DefaultTableModel(null, columnas);
         table1.setModel(modeloTabla);
     }
 
+    //Se llama al inicio y cada vez que vuelves de hacer un depósito/retiro.
     private void actualizarDatosEnPantalla() {
         ArrayList<Movimiento> historialReciente = BaseDatos.cargarHistorial(usuarioActual.getId());
-
+        // Actualizamos la lista interna del usuario
         usuarioActual.setHistorial(historialReciente);
 
+        // Actualizamos las etiquetas de texto (Nombre y Saldo)
         if (Usuario != null && Saldo != null) {
             Usuario.setText("Bienvenido: " + usuarioActual.getNombre());
             Saldo.setText("SALDO ACTUAL: " + df.format(usuarioActual.getSaldo()));
         }
 
+        //Limpiamos la tabla vieja
         modeloTabla.setRowCount(0);
-
+        // Llenamos la tabla de nuevo fila por fila
         if (historialReciente != null) {
             for (Movimiento mov : historialReciente) {
                 Object[] fila = {
                         mov.getTipo(),
+                        // Formateamos el monto también en la tabla
                         df.format(mov.getMonto()),
                         mov.getFecha()
                 };

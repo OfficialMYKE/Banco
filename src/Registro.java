@@ -58,7 +58,6 @@ public class Registro extends JFrame{
             JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
             return;
         }
-
         /*Usuario usuarioNuevo = new Usuario(nombre,cedula,email,contrasena,0.00);
         BaseDatos.ListaUsuarios.add(usuarioNuevo);
 

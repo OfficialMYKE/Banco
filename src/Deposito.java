@@ -9,9 +9,11 @@ public class Deposito extends JFrame {
     private JButton cancelarButton;
     private JTextField text_Monto;
 
+    // Guardamos al usuario que inicio sesion para saber a quien sumarle el dinero
     private Usuario usuarioActual;
 
     public Deposito(Usuario usuario) {
+        // Recibimos el objeto usuario desde la ventana principal
         this.usuarioActual = usuario;
 
         setContentPane(Pantalla_Deposito);
@@ -51,13 +53,13 @@ public class Deposito extends JFrame {
                 double nuevoSaldo = usuarioActual.getSaldo() + cantidadMonto;
                 String fechaHoy = LocalDate.now().toString();
 
-                // 1. Actualizamos el objeto local (para que la pantalla del Banco se actualice visualmente)
+                // Actualizamos el objeto local (para que la pantalla del Banco se actualice visualmente)
                 usuarioActual.setSaldo(nuevoSaldo);
 
-                // 2. Actualizamos el saldo en la Base de Datos
+                // Actualizamos el saldo en la Base de Datos
                 BaseDatos.actualizarSaldo(usuarioActual.getId(), nuevoSaldo);
 
-                // 3. Guardamos el movimiento en la tabla de la Base de Datos
+                // Guardamos el movimiento en la tabla de la Base de Datos
                 BaseDatos.guardarMovimiento(usuarioActual.getId(), "Depósito", cantidadMonto, fechaHoy);
 
                 // ELIMINADO: BaseDatos.guardarUsuarios(); (Ya no es necesario)
@@ -69,6 +71,7 @@ public class Deposito extends JFrame {
             }
 
         } catch (NumberFormatException e) {
+            // Si el usuario escribe letras en lugar de números
             JOptionPane.showMessageDialog(null, "Ingrese un valor numérico válido");
         }
     }
