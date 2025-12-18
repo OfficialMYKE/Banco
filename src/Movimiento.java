@@ -18,4 +18,8 @@ public class Movimiento implements Serializable {
     public String getTipo() { return tipo; }
     public double getMonto() { return monto; }
     public String getFecha() { return fecha; }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
 }

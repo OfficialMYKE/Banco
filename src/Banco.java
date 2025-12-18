@@ -18,6 +18,7 @@ public class Banco extends JFrame {
     private JButton TRANSFERENCIAButton;
     private JButton SALIRButton;
     private JTable table1;
+    private JButton ELIMINARREGISTROSButton;
 
     private Usuario usuarioActual;
     private DefaultTableModel modeloTabla;
@@ -86,6 +87,23 @@ public class Banco extends JFrame {
                 });
             }
         });
+
+        ELIMINARREGISTROSButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int respuesta = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que deseas borrar todo tu historial?",
+                        "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
+                if (respuesta == JOptionPane.YES_OPTION){
+                    boolean eliminado = BaseDatos.eliminarHistorial(usuarioActual.getId());
+                    if (eliminado){
+                        JOptionPane.showMessageDialog(null, "Historila eliminado correctamente.");
+                        actualizarDatosEnPantalla();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No hay registros para eliminar o hubo un error.");
+                    }
+                }
+            }
+        });
     }
 
     private void configurarTabla() {
@@ -95,16 +113,20 @@ public class Banco extends JFrame {
     }
 
     private void actualizarDatosEnPantalla() {
+        ArrayList<Movimiento> historialReciente = BaseDatos.cargarHistorial(usuarioActual.getId());
+
+        usuarioActual.setHistorial(historialReciente);
+
         if (Usuario != null && Saldo != null) {
             Usuario.setText("Bienvenido: " + usuarioActual.getNombre());
             Saldo.setText("SALDO ACTUAL: " + df.format(usuarioActual.getSaldo()));
         }
-        if (usuarioActual.getHistorial() !=null){
-            modeloTabla.setRowCount(0);
-            ArrayList<Movimiento> lista = usuarioActual.getHistorial();
 
-            for (Movimiento mov : lista){
-                Object[] fila ={
+        modeloTabla.setRowCount(0);
+
+        if (historialReciente != null) {
+            for (Movimiento mov : historialReciente) {
+                Object[] fila = {
                         mov.getTipo(),
                         df.format(mov.getMonto()),
                         mov.getFecha()

@@ -1,49 +1,12 @@
-/*import java.util.ArrayList;
-import java.io.*;
-
-public class BaseDatos {
-    public static ArrayList<Usuario> ListaUsuarios = new ArrayList<>();
-    private static final String Archivo = "usuarios.dat";
-
-    public static void guardarUsuarios(){
-        try {
-            FileOutputStream fos = new FileOutputStream(Archivo);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.close();
-            fos.close();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    public static void cargarUsuarios(){
-        try {
-            File ARCHIVO = new File(Archivo);
-            if (!ARCHIVO.exists()) {
-                return;
-            }
-
-            FileInputStream fis = new FileInputStream(Archivo);
-            ObjectInput ois = new ObjectInputStream(fis);
-
-            ListaUsuarios = (ArrayList<Usuario>) ois.readObject();
-
-            ois.close();
-            fis.close();
-        }catch (IOException | ClassNotFoundException e){
-            e.printStackTrace();
-        }
-    }
-}*/
-
 import java.sql.*;
 import java.util.ArrayList;
 
 public class BaseDatos {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/sistema_bancario";
-    private static final String USER = "root";
-    private static final String PASSWORD = "123456";
+    private static final String URL = "jdbc:mysql://bf1lvlxpjgtkyjbph2ko-mysql.services.clever-cloud.com:3306/bf1lvlxpjgtkyjbph2ko";
+
+    private static final String USER = "ubg9psiqlptr95jk";
+    private static final String PASSWORD = "uNfiqm82lHOOyGTrTUKW";
 
     public static Connection conectar() {
         try {
@@ -173,15 +136,33 @@ public class BaseDatos {
             ResultSet rs = pstmt.executeQuery();
 
             while(rs.next()) {
-                Movimiento mov = new Movimiento(
-                        rs.getString("tipo"),
-                        rs.getDouble("monto")
-                );
+                String tipo = rs.getString("tipo");
+                double monto = rs.getDouble("monto");
+                String fecha = rs.getString("fecha");
+
+                Movimiento mov = new Movimiento(tipo, monto);
+                mov.setFecha(fecha);
+
                 lista.add(mov);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return lista;
+    }
+
+    public static boolean eliminarHistorial(int usuarioId) {
+        String sql = "DELETE FROM movimientos WHERE usuario_id = ?";
+        try (Connection conn = conectar();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, usuarioId);
+            int filasAfectadas = pstmt.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
